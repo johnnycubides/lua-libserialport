@@ -25,6 +25,8 @@ build-linux() {
 	./autogen.sh
 	./configure --enable-static --disable-shared
 	make
+	echo "ls -ltrh .libs/"
+	ls -ltrh .libs/
 }
 
 if [[ -v 1 ]]; then

@@ -2,3 +2,5 @@ lua-*/
 lua/
 bin/
 src/libserialport/
+*.o
+*.so
