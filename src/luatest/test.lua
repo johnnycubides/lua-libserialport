@@ -15,7 +15,7 @@ print(ports[3])
 
 local options = {
 	baudRate = 115200,
-	controlFlow = 0,
+	flowControl = 0,
 	rts = 0,
 	dtr = 0,
 }
@@ -24,10 +24,11 @@ local options = {
 local port, error = serial.open("/dev/ttyUSB0", options)
 assert(port, error)
 
-serial.read(port, 10000, 5000)
+serial.read(port, 10000, 3000)
 
--- serial.write(port, "\r\n", 1000)
-local dataout = "print(1+1)\r\n"
-serial.write(port, dataout, 1000)
+serial.write(port, "\n", 100)
+serial.read(port, 100, 300)
+local dataout = "print(1+1)\n"
+print(serial.write(port, dataout, 1000))
 local res = serial.close(port)
 assert(res, "No fue posible cerrar el puerto ")
