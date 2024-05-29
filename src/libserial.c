@@ -38,11 +38,14 @@ static int l_open_port(lua_State *L) {
     return 2;
   }
   // Valores por default
-  int baudrate = 9600;
+  int baudrate = 115200;
   int bits = 8;
   int parity = SP_PARITY_NONE;
   int stopbits = 1;
   int flowcontrol = SP_FLOWCONTROL_NONE;
+  int dtr = SP_DTR_OFF;
+  int rts = SP_RTS_OFF;
+  int cts = SP_CTS_IGNORE;
 
   lua_getfield(L, 2, "baudRate");
   if (lua_isnumber(L, -1)) {
@@ -90,16 +93,111 @@ static int l_open_port(lua_State *L) {
   }
   lua_pop(L, 1);
 
-  if (sp_open(port, SP_MODE_READ_WRITE) == SP_OK) {
-    lua_getfield(L, 2, "baudRate");
-    if (lua_isnumber(L, -1)) {
-      baudrate = lua_tointeger(L, -1);
+  lua_getfield(L, 2, "dtr");
+  if (lua_isnumber(L, -1)) {
+    switch (lua_tointeger(L, -1)) {
+    case 0:
+      dtr = SP_DTR_OFF;
+      break;
+    case 1:
+      dtr = SP_DTR_ON;
+      break;
+    case 2:
+      dtr = SP_DTR_FLOW_CONTROL;
+      break;
+    case -1:
+      dtr = SP_DTR_INVALID;
+      break;
     }
-    sp_set_baudrate(port, 115200);
-    sp_set_bits(port, 8);
-    sp_set_parity(port, SP_PARITY_NONE);
-    sp_set_stopbits(port, 1);
-    sp_set_flowcontrol(port, SP_FLOWCONTROL_NONE);
+  }
+  lua_pop(L, 1);
+
+  lua_getfield(L, 2, "rts");
+  if (lua_isnumber(L, -1)) {
+    switch (lua_tointeger(L, -1)) {
+    case 0:
+      rts = SP_RTS_OFF;
+      break;
+    case 1:
+      rts = SP_RTS_ON;
+      break;
+    case 2:
+      rts = SP_RTS_FLOW_CONTROL;
+      break;
+    case -1:
+      rts = SP_RTS_INVALID;
+      break;
+    }
+  }
+  lua_pop(L, 1);
+
+  lua_getfield(L, 2, "cts");
+  if (lua_isnumber(L, -1)) {
+    switch (lua_tointeger(L, -1)) {
+    case 0:
+      sp_set_cts(port, SP_CTS_IGNORE);
+      break;
+    case 1:
+      sp_set_cts(port, SP_CTS_FLOW_CONTROL);
+      break;
+    case -1:
+      sp_set_cts(port, SP_CTS_INVALID);
+      break;
+    }
+  }
+  lua_pop(L, 1);
+
+  printf("%d", baudrate);
+  printf("%d", bits);
+  printf("%d", parity);
+  printf("%d", stopbits);
+  printf("%d", flowcontrol);
+
+  if (sp_open(port, SP_MODE_READ_WRITE) == SP_OK) {
+    if (sp_set_bits(port, baudrate) != SP_OK) {
+      lua_pushnil(L);
+      lua_pushstring(L, "Failed to set baudrate");
+    }
+
+    if (sp_set_bits(port, bits) != SP_OK) {
+      lua_pushnil(L);
+      lua_pushstring(L, "Failed to set bits");
+    }
+
+    if (sp_set_parity(port, parity) != SP_OK) {
+      lua_pushnil(L);
+      lua_pushstring(L, "Failed to set parity");
+    }
+
+    if (sp_set_stopbits(port, stopbits) != SP_OK) {
+      lua_pushnil(L);
+      lua_pushstring(L, "Failed to set stopbits");
+    }
+
+    if (sp_set_parity(port, parity) != SP_OK) {
+      lua_pushnil(L);
+      lua_pushstring(L, "Failed to set parity");
+    }
+
+    if (sp_set_stopbits(port, stopbits) != SP_OK) {
+      lua_pushnil(L);
+      lua_pushstring(L, "Failed to set stopbits");
+    }
+
+    if (sp_set_flowcontrol(port, flowcontrol) != SP_OK) {
+      lua_pushnil(L);
+      lua_pushstring(L, "Failed to set flowcontrol");
+    }
+
+    if (sp_set_dtr(port, dtr) != SP_OK) {
+      lua_pushnil(L);
+      lua_pushstring(L, "Failed to set baudrate");
+    }
+
+    if (sp_set_rts(port, rts) != SP_OK) {
+      lua_pushnil(L);
+      lua_pushstring(L, "Failed to set rts");
+    }
     lua_pushlightuserdata(L, port);
     return 1;
   } else {
@@ -147,11 +245,10 @@ static int l_read_to_port(lua_State *L) {
   return 1;
 }
 
-static const struct luaL_Reg libserial[] = {{"list_ports", l_list_port},
-                                            {"open", l_open_port},
-                                            {"write", l_write_to_port},
-                                            {"close", l_close_port},
-                                            {NULL, NULL}};
+static const struct luaL_Reg libserial[] = {
+    {"list_ports", l_list_port}, {"open", l_open_port},
+    {"read", l_read_to_port},    {"write", l_write_to_port},
+    {"close", l_close_port},     {NULL, NULL}};
 
 int luaopen_libserial(lua_State *L) {
   luaL_newlib(L, libserial);
