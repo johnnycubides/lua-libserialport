@@ -5,6 +5,8 @@ LIBSERIALPORT_DIR =.
 INCLUDES = -Iinclude
 LIBS = -L$(LIBSERIALPORT_DIR)/lib -lserialport
 
+f=./luatest/test.lua
+
 all: libserial.so
 
 libserial.so: libserial.o
@@ -12,6 +14,9 @@ libserial.so: libserial.o
 
 libserial.o: libserial.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+test:
+	./lua $f
 
 dist-linux:
 	rm -f libserial.zip
