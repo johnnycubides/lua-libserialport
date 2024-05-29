@@ -13,7 +13,12 @@ end
 assert(ports[3], "Puerto nil")
 print(ports[3])
 
-local port, error = serial.open(ports[3])
+local options = {
+	baudRate = 115200,
+	controlFlow = 2,
+}
+
+local port, error = serial.open(ports[3], options)
 assert(port, error)
 
 local dataout = "print(1+1)\r\n"

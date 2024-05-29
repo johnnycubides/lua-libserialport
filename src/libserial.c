@@ -27,12 +27,74 @@ static int l_list_port(lua_State *L) {
 static int l_open_port(lua_State *L) {
   const char *port_name = luaL_checkstring(L, 1);
   struct sp_port *port;
+  if (!lua_istable(L, 2)) {
+    lua_pushnil(L);
+    lua_pushstring(L, "Options must be a table {}");
+    return 2;
+  }
   if (sp_get_port_by_name(port_name, &port) != SP_OK) {
     lua_pushnil(L);
     lua_pushstring(L, "Failed get_port_by_name");
     return 2;
   }
+  // Valores por default
+  int baudrate = 9600;
+  int bits = 8;
+  int parity = SP_PARITY_NONE;
+  int stopbits = 1;
+  int flowcontrol = SP_FLOWCONTROL_NONE;
+
+  lua_getfield(L, 2, "baudRate");
+  if (lua_isnumber(L, -1)) {
+    baudrate = lua_tointeger(L, -1);
+  }
+  lua_pop(L, 1);
+
+  lua_getfield(L, 2, "bits");
+  if (lua_isnumber(L, -1)) {
+    bits = lua_tointeger(L, -1);
+  }
+  lua_pop(L, 1);
+
+  lua_getfield(L, 2, "parity");
+  if (lua_isnumber(L, -1)) {
+    parity = lua_tointeger(L, -1);
+  }
+  lua_pop(L, 1);
+
+  lua_getfield(L, 2, "stopBits");
+  if (lua_isnumber(L, -1)) {
+    stopbits = lua_tointeger(L, -1);
+  }
+  lua_pop(L, 1);
+
+  lua_getfield(L, 2, "flowControl");
+  if (lua_isnumber(L, -1)) {
+    flowcontrol = lua_tointeger(L, -1);
+    switch (lua_tointeger(L, -1)) {
+    case 0:
+      flowcontrol = SP_FLOWCONTROL_NONE;
+      break;
+    case 1:
+      flowcontrol = SP_FLOWCONTROL_XONXOFF;
+      break;
+    case 2:
+      flowcontrol = SP_FLOWCONTROL_RTSCTS;
+      break;
+    case 3:
+      flowcontrol = SP_FLOWCONTROL_DTRDSR;
+      break;
+    default:
+      break;
+    }
+  }
+  lua_pop(L, 1);
+
   if (sp_open(port, SP_MODE_READ_WRITE) == SP_OK) {
+    lua_getfield(L, 2, "baudRate");
+    if (lua_isnumber(L, -1)) {
+      baudrate = lua_tointeger(L, -1);
+    }
     sp_set_baudrate(port, 115200);
     sp_set_bits(port, 8);
     sp_set_parity(port, SP_PARITY_NONE);
