@@ -36,6 +36,7 @@ build-linux() {
 	elif [[ $VERSION == "5.4.6" ]]; then
 		make all test PLATFORM=$PLATFORM
 	fi
+	cp src/lua ../../src/lua
 }
 
 install-linux() {

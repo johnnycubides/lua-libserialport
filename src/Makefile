@@ -15,10 +15,10 @@ libserial.o: libserial.c
 
 dist-linux:
 	rm -f libserial.zip
-	zip -r libserial.zip ./lib/libserialport.so ./libserial.so
+	zip -r libserial.zip ./lib/libserialport.so.0 ./libserial.so
 
 clean:
-	rm -f *.o libserial.so
+	rm -f *.o libserial.so *.zip
 # Notes:
 # gcc -o libserial.so -shared -fPIC -Wall -Ilua -Llua -llua -Llibserialport/.libs -lserialport libserial.c
 # gcc -o mi_aplicacion main.c -I./libserialport -L./libserialport/.libs -lserialport -static
