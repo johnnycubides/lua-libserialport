@@ -1,5 +1,10 @@
 # lua-libserialport
 
+Se crea esta librería que funciona con Lua en su versión 5.4.6, que hace uso de
+libserialport, permite las diferentes configuraciones, control a través de timeout,
+para lectura y escritura de datos y control de dtr, rts para algunas tarjetas
+de desarrollo que requieren un estado incial de estas para su funcionamiento.
+
 ## Descarga y compilación de librería
 
 ### Plataforma Linux
@@ -30,7 +35,7 @@ TODO: Requiere crear los scripts
 ### Importación de librería
 
 ```lua
--- libserial.so depende de la librería compartida lib/libserialport,so,0
+-- libserial.so depende de la librería compartida lib/libserialport.so.0
 -- Con la siguiente instrucción es localizada relativamente
 package.cpath = package.cpath .. ";./lib/?.so"
 
@@ -91,14 +96,14 @@ local options = {
 ### Leer del puerto serial
 
 ```lua
-local size_data_in = 3 -- Cantidad de datos a recibir
-local timeout _ms = 1000 -- Esperar en milisegundos
-local data_in, size_received = serial.read(port, size_data_in, timeout_ms)
+local data_in_size = 3 -- Cantidad de datos a recibir
+local timeout_ms = 1000 -- Esperar en milisegundos
+local data_in, received_size = serial.read(port, data_in_size, timeout_ms)
 if data_in then
-  if size_received == size_data_in then
+  if received_size == size_data_in then
     print("Se recibieron la cantidad de datos esperados")
   end
-  print(data_in, size_received)
+  print("datain: " .. data_in .." received_size: " .. received_size)
 else
   print("No se recibieron datos")
 end
@@ -129,6 +134,12 @@ local result = serial.close(port)
 -- Si result = nil se genera el error indicado en el mensaje
 assert(result, "No fue posible cerrar el puerto")
 ```
+
+### Referencias
+
+* [libserialport api](https://www.sigrok.org/api/libserialport/0.1.1/index.html)
+* [lua 5.4](https://www.lua.org/manual/5.4/)
+* [jpnevulator](https://jpnevulator.snarl.nl/)
 
 Regards:
 
