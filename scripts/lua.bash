@@ -3,7 +3,7 @@
 APP=lua
 VERSION=5.4.6
 SCRIPT_PATH=$(pwd)
-BUILDER_PATH=$SCRIPT_PATH
+BUILDER_PATH=$SCRIPT_PATH/build-app
 DIR_APP=$BUILDER_PATH/lua-$VERSION
 BIN=$SCRIPT_PATH/bin
 LIB=$SCRIPT_PATH/lib
@@ -23,12 +23,13 @@ download() {
 	curl -L -R -O $DOWNLOAD_APP
 	tar xzf $APP-$VERSION.tar.gz
 	rm -f $APP-$VERSION.tar.gz
-	rm -f lua
 	ln -sr $APP-$VERSION $APP
 }
 
 build-linux() {
 	cd $DIR_APP
+	rm -f ../../src/lib/lua
+	ln -sr src ../../src/lib/lua
 	if [[ $VERSION == "5.2.4" ]]; then
 		dependencies
 		make linux

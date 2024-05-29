@@ -1,6 +1,7 @@
-lua-*/
-lua/
+build-app/
 bin/
-src/libserialport/
 *.o
-*.so
+*.so*
+*.a
+*.la
+pkgconfig

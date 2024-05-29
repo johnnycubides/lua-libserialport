@@ -2,7 +2,7 @@
 
 APP=libserialport
 SCRIPT_PATH=$(pwd)
-BUILDER_PATH=$SCRIPT_PATH/src
+BUILDER_PATH=$SCRIPT_PATH/build-app
 DIR_APP=$BUILDER_PATH/$APP
 
 dependencies() {
@@ -23,8 +23,10 @@ build-linux() {
 	cd $DIR_APP
 	dependencies
 	./autogen.sh
-	./configure --enable-static --disable-shared
+	# ./configure
+	./configure --prefix=$(pwd)/../../src/
 	make
+	make install
 	echo "ls -ltrh .libs/"
 	ls -ltrh .libs/
 }
