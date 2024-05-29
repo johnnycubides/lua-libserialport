@@ -13,6 +13,10 @@ libserial.so: libserial.o
 libserial.o: libserial.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
+dist-linux:
+	rm -f libserial.zip
+	zip -r libserial.zip ./lib/libserialport.so ./libserial.so
+
 clean:
 	rm -f *.o libserial.so
 # Notes:

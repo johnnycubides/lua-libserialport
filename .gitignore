@@ -1,3 +1,6 @@
+src/lua
+src/libserial.zip
+src/include/libserialport.h
 build-app/
 bin/
 *.o
