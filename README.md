@@ -84,9 +84,9 @@ local options = {
   stopBits = 1,
   flowControl = 0,  -- SP_FLOWCONTROL_NONE = 0, SP_FLOWCONTROL_XONXOFF = 1,
                     -- SP_FLOWCONTROL_RTSCTS = 2, SP_FLOWCONTROL_DTRDSR = 3 
-  dtr = 0,          -- SP_DTR_INVALID = -1, SP_DTR_OFF = 0,
+  dtr = -1,          -- SP_DTR_INVALID = -1, SP_DTR_OFF = 0,
                     -- SP_DTR_ON = 1, SP_DTR_FLOW_CONTROL = 2 
-  rts = 0,          -- SP_RTS_INVALID = -1, SP_RTS_OFF = 0,
+  rts = -1,          -- SP_RTS_INVALID = -1, SP_RTS_OFF = 0,
                     -- SP_RTS_ON = 1, SP_RTS_FLOW_CONTROL = 2 
   cts = 0,          -- SP_CTS_INVALID = -1,
                     -- SP_CTS_IGNORE = 0,
