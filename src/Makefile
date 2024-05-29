@@ -1,20 +1,23 @@
-CC = gcc
-CFLAGS = -Wall -shared -fPIC
-LIBS = -Llua -llua -Llibserialport/.libs -lserialport
-INCLUDE = -Ilua -Ilibserialport
+CC = gcc -v
+CFLAGS = -O2 -fPIC
+LDFLAGS = -shared
+LIBSERIALPORT_DIR =.
+INCLUDES = -Iinclude
+LIBS = -L$(LIBSERIALPORT_DIR)/lib -lserialport
 
-TARGET = libserial.so
+all: libserial.so
 
-all: $(TARGET)
-
-$(TARGET): libserial.o
-	$(CC) -o $(TARGET) $(CFLAGS) $(INCLUDE) $(LIBS) libserial.o
+libserial.so: libserial.o
+	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS) -Wl,-rpath,$(LIBSERIALPORT_DIR)/lib
 
 libserial.o: libserial.c
-	$(CC) $(CFLAGS) -c libserial.c $(INCLUDE)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -f *.o $(TARGET)
-
+	rm -f *.o libserial.so
 # Notes:
 # gcc -o libserial.so -shared -fPIC -Wall -Ilua -Llua -llua -Llibserialport/.libs -lserialport libserial.c
+# gcc -o mi_aplicacion main.c -I./libserialport -L./libserialport/.libs -lserialport -static
+# Saber los símbolos que tienen una librería: 
+# nm -D libserialport.so | grep sp_ope
+# ldd libserial.so

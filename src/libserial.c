@@ -1,7 +1,7 @@
-#include "./libserialport/libserialport.h"
-#include "lua/lauxlib.h"
-#include "lua/lua.h"
-#include "lua/lualib.h"
+#include "./include/libserialport.h"
+#include "./lib/lua/lauxlib.h"
+#include "./lib/lua/lua.h"
+#include "lib/lua/lualib.h"
 
 static int l_open_port(lua_State *L) {
   const char *port_name = luaL_checkstring(L, 1);
