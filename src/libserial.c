@@ -239,13 +239,14 @@ static int l_read_to_port(lua_State *L) {
   char *buffer = malloc(size + 1);
   int result = sp_blocking_read(port, buffer, size, timeout_ms);
   if (result > 0) {
-    lua_pushlstring(L, buffer, result);
+    lua_pushstring(L, buffer);
+    lua_pushinteger(L, result);
   } else {
     lua_pushnil(L);
     lua_pushinteger(L, result);
   }
   free(buffer);
-  return 1;
+  return 2;
 }
 
 static const struct luaL_Reg libserial[] = {
