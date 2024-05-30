@@ -45,6 +45,14 @@ local serial = require("libserial")
 
 ### Busqueda de puertos seriales
 
+Función:
+
+```lua
+local ports = serial.list_ports()
+```
+
+Ejemplo:
+
 ```lua
 -- Obtener información sobre los diferentes puertos seriales
 local ports = serial.list_ports()
@@ -60,6 +68,14 @@ end
 
 ### Abrir un puerto serial
 
+Función:
+
+```lua
+local port, error = serial.open("/dev/ttyUSB0", options)
+```
+
+Ejemplo:
+
 ```lua
 local options = {
   baudRate = 115200
@@ -74,6 +90,7 @@ assert(port, error)
 La variable `options` que representa una tabla puede tener cualquiera de los valores que se muestran
 a continuación comentados, los que están seleccionados son los que se dan por default.
 
+Opciones:
 ```lua
 local options = {
   baudRate = 9600,  -- 9600, 19200, 38400, 57600, 115200 
@@ -94,6 +111,14 @@ local options = {
 }
 ```
 ### Leer del puerto serial
+
+Función:
+
+```lua
+local data_in, received_size = serial.read(port, data_in_size, timeout_ms)
+```
+
+Ejemplo:
 
 ```lua
 local data_in_size = 3 -- Cantidad de datos a recibir
@@ -116,10 +141,18 @@ end
 Es importante indica que no se envía al final ningún comando especial como "\r\n", si los requiere debe agregarlos 
 en el string a enviar.
 
+Función:
+
+```lua
+local result = serial.write(port, data_out, timeout_ms)
+```
+
+Ejemplo:
+
 ```lua
 local data_out = "hello!"
 local timeout _ms = 1000 -- Esperar en milisegundos
-local result = serial.write(port, data_out, )
+local result = serial.write(port, data_out, timeout_ms)
 if result then
   print("Cantidad de datos enviados: " .. result)
 end
@@ -128,6 +161,14 @@ end
 **Nota**: Si `timeout_ms = 0`la aplicación se bloquea hasta enviar todos los datos indicados.
 
 ### Cerrar puerto serial
+
+Función:
+
+```lua
+local result = serial.close(port)
+```
+
+Ejemplo:
 
 ```lua
 local result = serial.close(port)
