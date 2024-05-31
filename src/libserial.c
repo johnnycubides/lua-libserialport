@@ -108,6 +108,8 @@ static int l_open_port(lua_State *L) {
     case -1:
       dtr = SP_DTR_INVALID;
       break;
+    default:
+      break;
     }
   }
   lua_pop(L, 1);
@@ -127,6 +129,8 @@ static int l_open_port(lua_State *L) {
     case -1:
       rts = SP_RTS_INVALID;
       break;
+    default:
+      break;
     }
   }
   lua_pop(L, 1);
@@ -142,6 +146,8 @@ static int l_open_port(lua_State *L) {
       break;
     case -1:
       sp_set_cts(port, SP_CTS_INVALID);
+      break;
+    default:
       break;
     }
   }
@@ -201,6 +207,8 @@ static int l_open_port(lua_State *L) {
       lua_pushstring(L, "Failed to set rts");
       return 2;
     }
+    // Realizar un flush
+    sp_flush(port, SP_BUF_BOTH);
     lua_pushlightuserdata(L, port);
     return 1;
   } else {
@@ -212,12 +220,12 @@ static int l_open_port(lua_State *L) {
 
 static int l_close_port(lua_State *L) {
   struct sp_port *port = lua_touserdata(L, 1);
-  if (sp_close(port) == SP_OK) {
-    sp_free_port(port);
-    lua_pushinteger(L, 1);
+  if (sp_close(port) != SP_OK) {
+    lua_pushnil(L);
     return 1;
   } else {
-    lua_pushnil(L);
+    sp_free_port(port);
+    lua_pushinteger(L, 1);
     return 1;
   }
 }
@@ -239,6 +247,7 @@ static int l_read_to_port(lua_State *L) {
   char *buffer = malloc(size + 1);
   int result = sp_blocking_read(port, buffer, size, timeout_ms);
   if (result > 0) {
+    buffer[result] = '\0';
     lua_pushstring(L, buffer);
     lua_pushinteger(L, result);
   } else {
@@ -249,10 +258,34 @@ static int l_read_to_port(lua_State *L) {
   return 2;
 }
 
-static const struct luaL_Reg libserial[] = {
-    {"list_ports", l_list_port}, {"open", l_open_port},
-    {"read", l_read_to_port},    {"write", l_write_to_port},
-    {"close", l_close_port},     {NULL, NULL}};
+static int l_flush_to_port(lua_State *L) {
+  struct sp_port *port = lua_touserdata(L, 1);
+  enum sp_buffer flush = SP_BUF_INPUT;
+  switch (luaL_checkinteger(L, 2)) {
+  case 1:
+    flush = SP_BUF_INPUT;
+    break;
+  case 2:
+    flush = SP_BUF_OUTPUT;
+    break;
+  case 3:
+    flush = SP_BUF_BOTH;
+    break;
+  default:
+    break;
+  }
+  enum sp_return result = sp_flush(port, flush);
+  lua_pushinteger(L, result);
+  return 1;
+}
+
+static const struct luaL_Reg libserial[] = {{"list_ports", l_list_port},
+                                            {"open", l_open_port},
+                                            {"read", l_read_to_port},
+                                            {"write", l_write_to_port},
+                                            {"flush", l_flush_to_port},
+                                            {"close", l_close_port},
+                                            {NULL, NULL}};
 
 int luaopen_libserial(lua_State *L) {
   luaL_newlib(L, libserial);
