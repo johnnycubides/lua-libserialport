@@ -179,7 +179,7 @@ local result = serial.flush(port, 3)
 
 if result == 0 then
   print("Ok flush buffer both")
-
+end
 ```
 
 ### Cerrar puerto serial
