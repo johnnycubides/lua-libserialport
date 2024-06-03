@@ -78,7 +78,7 @@ Ejemplo:
 
 ```lua
 local options = {
-  baudRate = 115200
+  baudRate = 9600
 }
 
 local port, error = serial.open("/dev/ttyUSB0", options)
@@ -93,7 +93,7 @@ a continuación comentados, los que están seleccionados son los que se dan por 
 Opciones:
 ```lua
 local options = {
-  baudRate = 9600,  -- 9600, 19200, 38400, 57600, 115200 
+  baudRate = 115200,  -- 9600, 19200, 38400, 57600, 115200 
   bits = 8,         -- 7, 8
   parity = 0,       -- SP_PARITY_INVALID = -1, SP_PARITY_NONE = 0,
                     -- SP_PARITY_ODD = 1, SP_PARITY_EVEN = 2,
@@ -159,6 +159,28 @@ end
 ```
 
 **Nota**: Si `timeout_ms = 0`la aplicación se bloquea hasta enviar todos los datos indicados.
+
+### Realizar flush
+
+Función:
+
+```lua
+local flush = 1 -- SP_BUF_INPUT = 1,
+                -- SP_BUF_OUTPUT = 2,
+                -- SP_BUF_BOTH = 3,
+
+local result = serial.flush(port, flush)
+```
+
+Ejemplo:
+
+```lua
+local result = serial.flush(port, 3)
+
+if result == 0 then
+  print("Ok flush buffer both")
+
+```
 
 ### Cerrar puerto serial
 
