@@ -5,6 +5,7 @@ build-app/
 bin/
 *.o
 *.so*
+*.dll
 *.a
 *.la
 pkgconfig

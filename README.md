@@ -29,7 +29,14 @@ make test
 
 ### Plataforma Windows
 
-TODO: Requiere crear los scripts
+TODO: Scripts aún en prueba
+
+```
+make libserialport-windows lua-windows
+cd src/
+make all AR=w64
+
+```
 
 
 ### Importación de librería
