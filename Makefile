@@ -1,3 +1,7 @@
+dependencies-windows:
+	@echo "Instalación de dependencias para crosscompilación, TARGET=Windows"
+	bash ./scripts/libserialport.bash dependencies-windows
+
 lua-download:
 	@echo "Descarga de lua"
 	bash ./scripts/lua.bash download

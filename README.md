@@ -11,7 +11,11 @@ de desarrollo que requieren un estado incial de estas para su funcionamiento.
 
 Descargar y compilar las dependendencias:
 
+```bash
+make libserialport-download lua-download
 ```
+
+```bash
 make libserialport-linux lua-linux
 cd src/
 make all
@@ -23,21 +27,31 @@ versión de Lua indicada.
 
 Si desea puede hacer pruebas de la librería con el script de prueba con el comando:
 
-```
+```bash
 make test
 ```
 
 ### Plataforma Windows
 
-TODO: Scripts aún en prueba
+1. Instalación de dependencias:
 
+```bash
+make dependencies-windows
 ```
+
+Descargar y compilar las dependendencias:
+
+```bash
+make libserialport-download lua-download
+```
+
+```bash
 make libserialport-windows lua-windows
 cd src/
 make all AR=w64
-
 ```
 
+TODO: Scripts aún en prueba
 
 ### Importación de librería
 
