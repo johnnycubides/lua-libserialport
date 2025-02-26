@@ -51,6 +51,8 @@ cd src/
 make all AR=w64
 ```
 
+Nota; El comando make libserialport-windows crea la librería ./src/bin/libserialport-0.dll.
+
 TODO: Scripts aún en prueba
 
 ### Importación de librería

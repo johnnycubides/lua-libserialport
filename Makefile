@@ -14,6 +14,7 @@ lua-linux:
 lua-windows:
 	@echo "Compilación o crosscompilación de Lua"
 	bash ./scripts/lua.bash build-windows
+	bash ./scripts/lua.bash install-windows
 
 libserialport-download:
 	@echo "Descargar la librería libserialpor"

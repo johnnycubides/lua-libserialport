@@ -5,6 +5,12 @@
 #include <string.h>
 // #include "lib/lua/lualib.h"
 
+#ifdef _WIN64
+  #define LIB_EXPORT __declspec(dllexport)
+#else
+  #define LIB_EXPORT
+#endif
+
 static int l_list_port(lua_State *L) {
   struct sp_port **port_list;
   enum sp_return result = sp_list_ports(&port_list);
@@ -287,7 +293,7 @@ static const struct luaL_Reg libserial[] = {{"list_ports", l_list_port},
                                             {"close", l_close_port},
                                             {NULL, NULL}};
 
-int luaopen_libserial(lua_State *L) {
+LIB_EXPORT int luaopen_libserial(lua_State *L) {
   luaL_newlib(L, libserial);
   return 1;
 }
